@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecografías Dr. Luis Clemente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --surface-3: #3a3a3c;
+    --border: rgba(255,255,255,0.09);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f2f2f7;
+    --text-secondary: #98989f;
+    --text-muted: #6e6e73;
+    --accent: #0a84ff;
+    --accent-text: #ffffff;
+    --danger: #ff453a;
+  }
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: -apple-system, "SF Pro Text", "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    margin: 0;
+    padding: 20px;
+    color: var(--text);
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-align: center;
+    margin: 4px 0 24px;
+  }
+  .layout {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+  .form-panel { flex: 1.2; min-width: 320px; }
+  .table-panel { flex: 1.6; min-width: 380px; }
+  .panel-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text-secondary);
+    margin: 0 0 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--text-secondary);
+    margin: 10px 0 4px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: inherit;
+  }
+  input::placeholder, textarea::placeholder { color: var(--text-muted); }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--surface-3);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  .row2 { display: flex; gap: 10px; }
+  .row2 > div { flex: 1; }
+  button {
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border: 0.5px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  button:hover { background: var(--surface-3); }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px 14px;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+  }
+  .btn-primary:hover { background: #0071e3; }
+  .hint {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  th {
+    text-align: left;
+    padding: 8px 8px;
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.3px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  td {
+    padding: 7px 8px;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: top;
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  .col-n { width: 30px; color: var(--text-muted); }
+  .col-del { width: 26px; text-align: center; }
+  .del-btn {
+    border: none;
+    background: none;
+    color: var(--danger);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+  }
+  .empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 30px 10px;
+  }
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .date-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .date-filter select { width: auto; }
+  .date-filter input { width: auto; padding: 7px 9px; }
+  .count-badge {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+  .export-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .export-row button { flex: 1; min-width: 140px; }
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface-3);
+    border: 0.5px solid var(--border-strong);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; }
+
+  #print-area {
+    display: none;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm 18mm;
+  }
+
+  @media print {
+    body * {
+      display: none !important;
+    }
+    #print-area, #print-area * {
+      display: block !important;
+    }
+    #print-area {
+      display: block !important;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: #000000;
+      background: #ffffff;
+    }
+    .print-header {
+      text-align: center;
+      border-bottom: 3px double #000000;
+      padding-bottom: 12px;
+      margin-bottom: 30px;
+    }
+    .print-header h2 {
+      margin: 0;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .print-header p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #444444;
+    }
+    .print-patient-info {
+      width: 100%;
+      margin-bottom: 30px;
+      font-size: 13px;
+      border-collapse: collapse;
+    }
+    .print-patient-info td {
+      padding: 6px 0;
+      border-bottom: 1px dashed #cccccc !important;
+    }
+    .print-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 25px 0;
+      text-decoration: underline;
+    }
+    .print-protocol {
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      text-align: justify;
+      margin-bottom: 60px;
+    }
+    .print-signatures {
+      margin-top: 80px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .signature-line {
+      border-top: 1px solid #000000;
+      width: 220px;
+      text-align: center;
+      padding-top: 5px;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>Ecografías Dr. Luis Clemente</h1>
+
+<div class="layout">
+
+  <div class="panel form-panel">
+    <p class="panel-title">Nuevo registro e informe</p>
+
+    <label>Fecha del estudio</label>
+    <input type="date" id="f-fecha">
+
+    <label>Nombre del paciente</label>
+    <input type="text" id="f-nombre" placeholder="Nombre y apellido">
+
+    <div class="row2">
+      <div>
+        <label>DNI</label>
+        <input type="text" id="f-dni" placeholder="DNI">
+      </div>
+      <div>
+        <label>Edad</label>
+        <input type="number" id="f-edad" placeholder="Edad">
+      </div>
+    </div>
+
+    <label>Obra social</label>
+    <input type="text" id="f-obra" list="obras" placeholder="Obra social o particular">
+    <datalist id="obras">
+      <option value="Particular">
+      <option value="PAMI">
+      <option value="OSDE">
+      <option value="Swiss Medical">
+      <option value="Galeno">
+      <option value="Medicus">
+      <option value="IOMA">
+    </datalist>
+
+    <label>Tipo de estudio</label>
+    <select id="f-estudio">
+      <option value="ECOGRAFÍA ABDOMINAL">ECOGRAFÍA ABDOMINAL</option>
+      <option value="ECOGRAFÍA RENAL">ECOGRAFÍA RENAL</option>
+      <option value="ECOGRAFÍA MAMARIA">ECOGRAFÍA MAMARIA</option>
+      <option value="ECOGRAFÍA GINECOLÓGICA">ECOGRAFÍA GINECOLÓGICA</option>
+      <option value="ECOGRAFÍA TIROIDEA">ECOGRAFÍA TIROIDEA</option>
+      <option value="ECOGRAFÍA DE PARTES BLANDAS">ECOGRAFÍA DE PARTES BLANDAS</option>
+      <option value="ECOGRAFÍA DOPPLER">ECOGRAFÍA DOPPLER</option>
+      <option value="OTRO ESTUDIO ECOGRÁFICO">OTRO ESTUDIO ECOGRÁFICO</option>
+    </select>
+
+    <label>Texto del protocolo clínico</label>
+    <textarea id="f-protocolo" placeholder="Cuerpo del informe ecográfico..."></textarea>
+
+    <label>Diagnóstico / Hallazgo principal (Para morbilidad)</label>
+    <input type="text" id="f-hallazgo" placeholder="Ej: ESTEATOSIS HEPÁTICA LEVE">
+
+    <button class="btn-primary" id="btn-guardar">Guardar e Imprimir Informe</button>
+    <p class="hint">Al hacer clic se registrará la fila en la morbilidad y se abrirá la ventana de impresión para el paciente de forma inmediata.</p>
+  </div>
+
+  <div class="panel table-panel">
+    <div class="toolbar">
+      <p class="panel-title" style="margin:0">Registros acumulados</p>
+      <span class="count-badge" id="count-badge">0 registros</span>
+    </div>
+    <div class="date-filter">
+      <label style="margin:0">Ver:</label>
+      <select id="filtro-modo">
+        <option value="dia">Un día</option>
+        <option value="rango">Rango de fechas</option>
+        <option value="todo">Todo el historial</option>
+      </select>
+      <input type="date" id="filtro-fecha">
+      <input type="date" id="filtro-desde" style="display:none">
+      <span id="filtro-hasta-label" style="display:none">a</span>
+      <input type="date" id="filtro-hasta" style="display:none">
+    </div>
+
+    <div id="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-n">N°</th>
+            <th>Fecha</th>
+            <th>Paciente</th>
+            <th>Obra social</th>
+            <th>Estudio</th>
+            <th>Hallazgo / Diagnóstico</th>
+            <th class="col-del"></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty-state" id="empty-state">No hay registros para este filtro.</div>
+    </div>
+
+    <div class="export-row">
+      <button id="btn-tsv">Copiar / descargar TSV</button>
+      <button id="btn-excel">Descargar Excel (.xlsx)</button>
+    </div>
+    <p class="hint">La auditoría descargará exactamente lo que se encuentre filtrado arriba en la tabla.</p>
+  </div>
+
+</div>
+
+<div id="print-area">
+  <div class="print-header">
+    <h2 id="p-clinica">ECOGRAFÍAS DR. LUIS CLEMENTE</h2>
+    <p>INFORME DE ESTUDIO ECOGRÁFICO</p>
+  </div>
+  
+  <table class="print-patient-info">
+    <tr>
+      <td style="width: 50%;"><strong>PACIENTE:</strong> <span id="p-nombre"></span></td>
+      <td style="width: 50%;"><strong>FECHA:</strong> <span id="p-fecha"></span></td>
+    </tr>
+    <tr>
+      <td style="width: 50%;"><strong>DNI / ID:</strong> <span id="p-dni"></span></td>
+      <td style="width: 50%;"><strong>EDAD:</strong> <span id="p-edad"></span> ANÑOS</td>
+    </tr>
+    <tr>
+      <td colspan="2"><strong>OBRA SOCIAL / COBERTURA:</strong> <span id="p-obra"></span></td>
+    </tr>
+  </table>
+
+  <div class="print-title" id="p-estudio-titulo"></div>
+  <div class="print-protocol" id="p-protocolo-cuerpo"></div>
+  
+  <div class="print-signatures">
+    <div class="signature-line">
+      MÉDICO OPERADOR
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'morbilidad_eco_registros_v1';
+let registros = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+const PROTOCOLOS_BASE = {
+  "ECOGRAFÍA ABDOMINAL": `HÍGADO: DE FORMA Y TAMAÑO CONSERVADOS, ECOESTRUCTURA Y PARENQUIMA HOMOGÉNEOS. NO SE OBSERVAN IMÁGENES DE LESIONES FOCALES NI DIFUSAS.\nVESÍCULA BILIAR: DE PAREDES FINAS, ALITIÁSICA.\nVÍAS BILIARES: INTRA Y EXTRAHEPÁTICAS DE CALIBRE NORMAL.\nPÁNCREAS: DE TAMAÑO Y ECOESTRUCTURA CONSERVADOS.\nBAZO: HOMOGÉNEO, SIN ESPLENOMEGALIA.\nAORTA ABDOMINAL: DE CALIBRE CONSERVADO.\nNO SE OBSERVA LÍQUIDO LIBRE EN CAVIDAD PERITONEAL.`,
+  
+  "ECOGRAFÍA RENAL": `RIÑÓN DERECHO: EN SITUACIÓN, ANATOMÍA Y TAMAÑO NORMALES. ESPESOR DE LA CORTEZA Y RELACIÓN CORTICOMEDULAR PRESERVADOS. NO SE APRECIAN IMÁGENES DE LITIASIS NI SIGNOS DE ECTASIA PIELOCALICIAL.\nRIÑÓN IZQUIERDO: EN SITUACIÓN Y DIMENSIONES CONSERVADAS. RELACIÓN CORTICOMEDULAR PRESERVADA. NO SE DETECTAN LESIONES SÓLIDAS, QUÍSTICAS NI SIGNOS DE RETENCIÓN URINARIA.`,
+  
+  "ECOGRAFÍA MAMARIA": `TEJIDO FIBROGLANDULAR: DE DISTRIBUCIÓN Y ECOESTRUCTURA NORMAL PARA LA EDAD DE LA PACIENTE.\nECOESTRUCTURA: CONSERVADA. NO SE OBSERVAN IMÁGENES DE NÓDULOS SÓLIDOS NI LESIONES QUÍSTICAS CON CRITERIOS DE SOSPECHA (BI-RADS 1).\nTEJIDO CELULAR SUBCUTÁNEO Y PLANOS MUSCULARES: SIN ALTERACIONES.\nREGIONES AXILARES: EXPLORADAS SIN EVIDENCIA DE ADENOMEGALIAS DE CARACTERÍSTICAS PATOLÓGICAS.`,
+  
+  "ECOGRAFÍA GINECOLÓGICA": `ÚTERO: EN ANTEVERSOFLEXIÓN, DE TAMAÑO, FORMA Y ECOESTRUCTURA CONSERVADOS. MIOMETRIO HOMOGÉNEO.\nENDOMETRIO: LINEAL, HOMOGÉNEO, CENTRAL, ACORDE A LA FASE DEL CICLO.\nOVARIO DERECHO: DE TAMAÑO Y ECOESTRUCTURA NORMAL.\nOVARIO IZQUIERDO: DE TAMAÑO Y ECOESTRUCTURA DENTRO DE LOS LÍMITES NORMALES.\nFONDO DE SACO DE DOUGLAS: LIBRE, SIN EVIDENCIA DE LÍQUIDO.`,
+  
+  "ECOGRAFÍA TIROIDEA": `LÓBULO DERECHO: DE DIMENSIONES CONSERVADAS, HOMOGÉNEO. NO SE OBSERVAN NÓDULOS.\nLÓBULO IZQUIERDO: DE MORFOLOGÍA Y TAMAÑO NORMALES, ECOESTRUCTURA PARENQUIMATOSA CONSERVADA.\nISTMO: DE ESPESOR NORMAL, HOMOGÉNEO.\nNO SE REGISTRAN ADENOMEGALIAS EN LAS CADENAS GANGLIONARES CERVICALES EXPLORADAS.`,
+  
+  "ECOGRAFÍA DE PARTES BLANDAS": `TEJIDO CELULAR SUBCUTÁNEO: DE ECOESTRUCTURA Y ESPESOR CONSERVADOS.\nESTRUCTURAS MUSCULARES REGIONALES: CONTINUIDAD Y ECOGENICIDAD DE LAS FIBRAS PRESERVADAS. NO SE OBSERVAN COLECCIONES LÍQUIDAS, HEMATOMAS NI ALTERACIONES FOCALES DE LA ECOESTRUCTURA.`,
+  
+  "ECOGRAFÍA DOPPLER": `ANÁLISIS MORFOLÓGICO Y DINÁMICO:\nFLUJO ARTERIAL: PRESENTA CURVAS DE VELOCIDAD DE PULSO CON UN PATRÓN TRIFÁSICO NORMAL, DE ALTA RESISTENCIA CONSERVADA.\nÍNDICES DE RESISTENCIA: DENTRO DE LOS PARÁMETROS DE NORMALIDAD.\nFLUJO VENOSO: DIRECCIÓN CEFÁLICA, FASICULACIÓN RESPIRATORIA NORMAL Y RESPUESTA ADECUADA A LAS MANIOBRAS DE COMPRESIÓN MANUAL SIN SIGNOS DE INSUFICIENCIA NI TROMBOSIS.`,
+  
+  "OTRO ESTUDIO ECOGRÁFICO": `ESTUDIO DENTRO DE LOS PARÁMETROS DE NORMALIDAD. SIN HALLAZGOS PATOLÓGICOS RELEVANTES AL MOMENTO DEL EXAMEN.`
+};
+
+const $ = (id) => document.getElementById(id);
+const tbody = $('tbody');
+const emptyState = $('empty-state');
+const countBadge = $('count-badge');
+const toast = $('toast');
+
+function hoy() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+
+$('f-fecha').value = hoy();
+$('filtro-fecha').value = hoy();
+
+function actualizarProtocoloPorDefecto() {
+  const estudioSeleccionado = $('f-estudio').value;
+  $('f-protocolo').value = PROTOCOLOS_BASE[estudioSeleccionado] || "";
+}
+$('f-estudio').addEventListener('change', actualizarProtocoloPorDefecto);
+actualizarProtocoloPorDefecto();
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1800);
+}
+
+function guardar() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+}
+
+function fechaVisible(f) {
+  const [y, m, d] = f.split('-');
+  return d + '/' + m + '/' + y;
+}
+
+function filtrarRegistros() {
+  const modo = $('filtro-modo').value;
+  if (modo === 'todo') return registros;
+  if (modo === 'dia') {
+    const f = $('filtro-fecha').value;
+    return registros.filter(r => r.fecha === f);
+  }
+  const desde = $('filtro-desde').value;
+  const hasta = $('filtro-hasta').value;
+  return registros.filter(r => (!desde || r.fecha >= desde) && (!hasta || r.fecha <= hasta));
+}
+
+function render() {
+  const filtrados = filtrarRegistros();
+  tbody.innerHTML = '';
+  if (filtrados.length === 0) {
+    emptyState.style.display = 'block';
+  } else {
+    emptyState.style.display = 'none';
+    filtrados.forEach((r, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="col-n">' + (i + 1) + '</td>' +
+        '<td>' + fechaVisible(r.fecha) + '</td>' +
+        '<td><strong>' + r.nombre + '</strong>' + (r.edad ? ' (' + r.edad + ' AÑOS)' : '') + '</td>' +
+        '<td>' + r.obra + '</td>' +
+        '<td>' + r.estudio + '</td>' +
+        '<td>' + r.hallazgo + '</td>' +
+        '<td class="col-del"><button class="del-btn" data-id="' + r.id + '">×</button></td>';
+      tbody.appendChild(tr);
+    });
+  }
+  countBadge.textContent = filtrados.length + (filtrados.length === 1 ? ' registro' : ' registros');
+
+  tbody.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      registros = registros.filter(r => String(r.id) !== id);
+      guardar();
+      render();
+    });
+  });
+}
+
+$('btn-guardar').addEventListener('click', () => {
+  const nombreRaw = $('f-nombre').value.trim();
+  if (!nombreRaw) {
+    showToast('Falta el nombre del paciente');
+    return;
+  }
+
+  const nombre = nombreRaw.toUpperCase();
+  const dni = $('f-dni').value.trim();
+  const edad = $('f-edad').value.trim();
+  const obra = ($('f-obra').value.trim() || 'Particular').toUpperCase();
+  const estudio = $('f-estudio').value.toUpperCase();
+  const protocolo = $('f-protocolo').value.trim().toUpperCase();
+  const hallazgo = ($('f-hallazgo').value.trim() || 'SIN HALLAZGOS RELEVANTES').toUpperCase();
+  const fechaEstudio = $('f-fecha').value || hoy();
+
+  registros.push({
+    id: Date.now(),
+    fecha: fechaEstudio,
+    nombre: nombre,
+    dni: dni,
+    edad: edad,
+    obra: obra,
+    estudio: estudio,
+    hallazgo: hallazgo
+  });
+  guardar();
+
+  $('p-nombre').textContent = nombre;
+  $('p-fecha').textContent = fechaVisible(fechaEstudio);
+  $('p-dni').textContent = dni || "---";
+  $('p-edad').textContent = edad || "---";
+  $('p-obra').textContent = obra;
+  $('p-estudio-titulo').textContent = estudio;
+  $('p-protocolo-cuerpo').textContent = protocolo;
+
+  setTimeout(() => {
+    window.print();
+  }, 250);
+
+  $('f-nombre').value = '';
+  $('f-dni').value = '';
+  $('f-edad').value = '';
+  $('f-obra').value = '';
+  $('f-hallazgo').value = '';
+  actualizarProtocoloPorDefecto();
+  render();
+  showToast('Registro guardado e informe generado');
+});
+
+$('filtro-modo').addEventListener('change', () => {
+  const modo = $('filtro-modo').value;
+  $('filtro-fecha').style.display = modo === 'dia' ? 'inline-block' : 'none';
+  $('filtro-desde').style.display = modo === 'rango' ? 'inline-block' : 'none';
+  $('filtro-hasta').style.display = modo === 'rango' ? 'inline-block' : 'none';
+  $('filtro-hasta-label').style.display = modo === 'rango' ? 'inline' : 'none';
+  render();
+});
+$('filtro-fecha').addEventListener('change', render);
+$('filtro-desde').addEventListener('change', render);
+$('filtro-hasta').addEventListener('change', render);
+
+function nombreArchivo(ext) {
+  const modo = $('filtro-modo').value;
+  let etiqueta = 'todo';
+  if (modo === 'dia') etiqueta = $('filtro-fecha').value;
+  if (modo === 'rango') etiqueta = ($('filtro-desde').value || 'inicio') + '_a_' + ($('filtro-hasta').value || 'fin');
+  return 'morbilidad_ecografias_' + etiqueta + '.' + ext;
+}
+
+function datosParaExportar() {
+  const filtrados = filtrarRegistros();
+  return filtrados.map((r, i) => ({
+    'N°': i + 1,
+    'Fecha': fechaVisible(r.fecha),
+    'Paciente': r.nombre,
+    'DNI': r.dni,
+    'Edad': r.edad,
+    'Obra social': r.obra,
+    'Estudio': r.estudio,
+    'Hallazgo / Diagnóstico': r.hallazgo
+  }));
+}
+
+$('btn-tsv').addEventListener('click', () => {
+  const datos = datosParaExportar();
+  if (datos.length === 0) {
+    showToast('No hay registros para exportar');
+    return;
+  }
+  const headers = Object.keys(datos[0]);
+  const lineas = [headers.join('\t')];
+  datos.forEach(fila => {
+    lineas.push(headers.map(h => String(fila[h] ?? '')).join('\t'));
+  });
+  const tsv = lineas.join('\n');
+
+  navigator.clipboard.writeText(tsv).then(() => {
+    showToast('TSV copiado al portapapeles');
+  }).catch(() => {
+    showToast('No se pudo copiar, se descarga el archivo');
+  });
+
+  const blob = new Blob([tsv], { type: 'text/tab-separated-values;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombreArchivo('tsv');
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('btn-excel').addEventListener('click', () => {
+  const datos = datosParaExportar();
+  if (datos.length === 0) {
+    showToast('No hay registros para exportar');
+    return;
+  }
+  const ws = XLSX.utils.json_to_sheet(datos);
+  ws['!cols'] = [
+    { wch: 5 }, { wch: 12 }, { wch: 28 }, { wch: 14 },
+    { wch: 8 }, { wch: 18 }, { wch: 26 }, { wch: 40 }
+  ];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Morbilidad');
+  const hoyStr = fechaVisible(hoy()).replace(/\//g, '-');
+  XLSX.writeFile(wb, 'Ecografías Dr. Luis Clemente (' + hoyStr + ').xlsx');
+  showToast('Excel descargado');
+});
+
+render();
+</script>
+
+</body>
+</html>
