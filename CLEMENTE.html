@@ -6,7 +6,7 @@
 <title>Ecografías Dr. Luis Clemente</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   :root {
@@ -223,6 +223,9 @@
   }
 
   @media print {
+    html, body {
+      background: #ffffff !important;
+    }
     body * {
       display: none !important;
     }
@@ -241,59 +244,148 @@
       background: #ffffff;
     }
     .print-header {
-      text-align: center;
-      border-bottom: 3px double #000000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 1px solid #000000;
       padding-bottom: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
-    .print-header h2 {
-      margin: 0;
-      font-size: 22px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .print-header img {
+      height: 62px;
+      width: auto;
+      object-fit: contain;
     }
-    .print-header p {
-      margin: 4px 0 0;
-      font-size: 12px;
-      color: #444444;
+    .print-header .header-address {
+      text-align: right;
+      font-size: 9px;
+      color: #333333;
+      line-height: 1.5;
+      padding-top: 4px;
+      white-space: nowrap;
     }
-    .print-patient-info {
-      width: 100%;
-      margin-bottom: 30px;
-      font-size: 13px;
-      border-collapse: collapse;
+    .print-patient-box {
+      border: 0.75px solid #d5d5d5;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
     }
-    .print-patient-info td {
-      padding: 6px 0;
-      border-bottom: 1px dashed #cccccc !important;
+    .ppb-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 20px;
+      font-size: 11.5px;
+      font-family: Arial, sans-serif;
+      padding: 6px 16px;
+      border-bottom: 1px solid #e4e4e4;
+    }
+    .ppb-row:last-child {
+      border-bottom: none;
+    }
+    .ppb-field {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .ppb-field.wide {
+      flex: 1;
+      min-width: 180px;
+    }
+    .ppb-value {
+      border-bottom: 1px solid #aaaaaa;
+      min-width: 60px;
+      padding: 0 4px 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ppb-field.wide .ppb-value {
+      flex: 1;
+      min-width: 110px;
     }
     .print-title {
       text-align: center;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       text-transform: uppercase;
-      margin: 25px 0;
-      text-decoration: underline;
+      margin: 18px 0 18px;
     }
-    .print-protocol {
-      font-size: 13px;
-      line-height: 1.6;
-      white-space: pre-wrap;
+    .print-protocol p {
+      font-size: 11.5px;
+      line-height: 1.55;
       text-align: justify;
-      margin-bottom: 60px;
+      margin: 0 0 13px;
+    }
+    .print-conclusion {
+      margin: 4px 0 22px;
+      font-size: 11.5px;
+      line-height: 1.6;
+    }
+    .print-conclusion .conclusion-label {
+      margin-bottom: 6px;
+      display: block;
+    }
+    .print-conclusion .conclusion-label strong {
+      font-weight: bold;
+    }
+    .print-conclusion ol {
+      margin: 0;
+      padding-left: 24px;
+    }
+    .print-conclusion li {
+      font-weight: bold;
+    }
+    .print-correlacionar {
+      font-size: 11.5px;
+      line-height: 1.55;
+      margin: 0 0 20px;
+      text-align: justify;
     }
     .print-signatures {
-      margin-top: 80px;
+      margin-top: 40px;
       display: flex;
-      justify-content: flex-end;
-    }
-    .signature-line {
-      border-top: 1px solid #000000;
-      width: 220px;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      padding-top: 5px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .sig-space {
+      height: 20px;
+    }
+    .signature-line .sig-name {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 40px;
+      font-weight: normal;
+      color: #000000;
+      display: block;
+      margin-bottom: 2px;
+      line-height: 1;
+    }
+    .signature-line .sig-role {
+      display: block;
+      font-family: Arial, sans-serif;
+      color: #333333;
       font-size: 12px;
+      margin-bottom: 1px;
+    }
+    .signature-line .sig-mn {
+      display: block;
+      font-family: Arial, sans-serif;
+      color: #333333;
+      font-size: 12px;
+    }
+    .print-disclaimer {
+      font-size: 8.5px;
+      text-align: center;
+      color: #9a9a9a;
       text-transform: uppercase;
+      letter-spacing: 0.2px;
+      line-height: 1.5;
+      margin-top: 26px;
     }
   }
 </style>
@@ -351,8 +443,9 @@
     <label>Texto del protocolo clínico</label>
     <textarea id="f-protocolo" placeholder="Cuerpo del informe ecográfico..."></textarea>
 
-    <label>Diagnóstico / Hallazgo principal (Para morbilidad)</label>
-    <input type="text" id="f-hallazgo" placeholder="Ej: ESTEATOSIS HEPÁTICA LEVE">
+    <label>Hallazgos para la conclusión (uno por línea, mínimo 2)</label>
+    <textarea id="f-hallazgo" style="min-height:70px" placeholder="ESTEATOSIS HEPÁTICA GRADO I
+LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
 
     <button class="btn-primary" id="btn-guardar">Guardar e Imprimir Informe</button>
     <p class="hint">Al hacer clic se registrará la fila en la morbilidad y se abrirá la ventana de impresión para el paciente de forma inmediata.</p>
@@ -405,33 +498,52 @@
 
 <div id="print-area">
   <div class="print-header">
-    <h2 id="p-clinica">ECOGRAFÍAS DR. LUIS CLEMENTE</h2>
-    <p>INFORME DE ESTUDIO ECOGRÁFICO</p>
+    <img src="https://github.com/henryajf/FILES-RECET.AR-/blob/main/tachella.png?raw=true" alt="Logo clínica">
+    <div class="header-address">
+      AV 2DA.RIVADAVIA 15577 (1706) HAEDO-PCIA DE BS.AS<br>
+      TURNOS :0810-220-1430 INT.102//0810-220-0086 INT.101
+    </div>
   </div>
-  
-  <table class="print-patient-info">
-    <tr>
-      <td style="width: 50%;"><strong>PACIENTE:</strong> <span id="p-nombre"></span></td>
-      <td style="width: 50%;"><strong>FECHA:</strong> <span id="p-fecha"></span></td>
-    </tr>
-    <tr>
-      <td style="width: 50%;"><strong>DNI / ID:</strong> <span id="p-dni"></span></td>
-      <td style="width: 50%;"><strong>EDAD:</strong> <span id="p-edad"></span> ANÑOS</td>
-    </tr>
-    <tr>
-      <td colspan="2"><strong>OBRA SOCIAL / COBERTURA:</strong> <span id="p-obra"></span></td>
-    </tr>
-  </table>
+
+  <div class="print-patient-box">
+    <div class="ppb-row">
+      <span class="ppb-field wide"><strong>Nombre y apellido:</strong> <span class="ppb-value" id="p-nombre"></span></span>
+      <span class="ppb-field"><strong>DNI:</strong> <span class="ppb-value" id="p-dni"></span></span>
+      <span class="ppb-field"><strong>Edad:</strong> <span class="ppb-value" id="p-edad"></span> años</span>
+    </div>
+    <div class="ppb-row">
+      <span class="ppb-field wide"><strong>Obra social / Cobertura:</strong> <span class="ppb-value" id="p-obra"></span></span>
+      <span class="ppb-field"><strong>Fecha:</strong> <span class="ppb-value" id="p-fecha"></span></span>
+    </div>
+  </div>
 
   <div class="print-title" id="p-estudio-titulo"></div>
   <div class="print-protocol" id="p-protocolo-cuerpo"></div>
-  
+
+  <div class="print-conclusion">
+    <span class="conclusion-label"><strong>Conclusión:</strong> Signos Ecográficos Sugestivos De:</span>
+    <ol id="p-conclusion-lista"></ol>
+  </div>
+
+  <p class="print-correlacionar">
+    Correlacionar hallazgos con antecedentes, clínica y examen físico del paciente, valoración oportuna con médico tratante.
+  </p>
+
   <div class="print-signatures">
+    <div class="sig-space"></div>
     <div class="signature-line">
-      MÉDICO OPERADOR
+      <span class="sig-name">Dr.Luis Clemente Suàrez</span>
+      <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
+      <span class="sig-mn">M.N 211820</span>
     </div>
   </div>
+
+  <p class="print-disclaimer">
+    Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada.
+    No debe ser utilizado como parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional
+  </p>
 </div>
+
 
 <div class="toast" id="toast"></div>
 
@@ -440,21 +552,21 @@ const STORAGE_KEY = 'morbilidad_eco_registros_v1';
 let registros = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
 const PROTOCOLOS_BASE = {
-  "ECOGRAFÍA ABDOMINAL": `HÍGADO: DE FORMA Y TAMAÑO CONSERVADOS, ECOESTRUCTURA Y PARENQUIMA HOMOGÉNEOS. NO SE OBSERVAN IMÁGENES DE LESIONES FOCALES NI DIFUSAS.\nVESÍCULA BILIAR: DE PAREDES FINAS, ALITIÁSICA.\nVÍAS BILIARES: INTRA Y EXTRAHEPÁTICAS DE CALIBRE NORMAL.\nPÁNCREAS: DE TAMAÑO Y ECOESTRUCTURA CONSERVADOS.\nBAZO: HOMOGÉNEO, SIN ESPLENOMEGALIA.\nAORTA ABDOMINAL: DE CALIBRE CONSERVADO.\nNO SE OBSERVA LÍQUIDO LIBRE EN CAVIDAD PERITONEAL.`,
+  "ECOGRAFÍA ABDOMINAL": `Se practicó ecosonograma abdominal con transductor convex multifrecuencial, apreciándose:\n\nHÍGADO: De forma y tamaño conservados, parénquima homogéneo, bien definido, de bordes regulares, sin lesiones focales en su superficie. Calibre, configuración y ecogenicidad de vasos portales y hepáticos conservados.\nVESÍCULA: De paredes finas, alitiásica, sin imágenes en su interior.\nVÍAS BILIARES: Intra y extrahepáticas de calibre normal, sin alteraciones ecográficas aparentes.\nESTÓMAGO Y ASAS INTESTINALES: Antro gástrico sin alteraciones ecográficas aparentes, asas intestinales con presencia de gas, movimientos peristálticos presentes.\nPÁNCREAS: De tamaño y ecoestructura conservados.\nBAZO: Homogéneo, de forma y tamaño conservado, sin esplenomegalia ni imágenes sugestivas de lesión sólida o quística.\nAORTA, CAVA Y RESTO DE VASOS RETROPERITONEALES: Sin alteraciones ecográficas aparentes.\nRIÑÓN DERECHO: Visible en su posición habitual, de forma, tamaño y relación corticomedular conservada. Parénquima renal homogéneo, seno renal normal, sin signos de hidronefrosis ni de tumor sólido o quístico.\nRIÑÓN IZQUIERDO: Visible en su posición habitual, de forma, tamaño y relación corticomedular conservada. Parénquima renal homogéneo, seno renal normal, sin signos de litiasis ni de tumor sólido o quístico.\nNo se observa líquido libre en cavidad peritoneal.`,
   
-  "ECOGRAFÍA RENAL": `RIÑÓN DERECHO: EN SITUACIÓN, ANATOMÍA Y TAMAÑO NORMALES. ESPESOR DE LA CORTEZA Y RELACIÓN CORTICOMEDULAR PRESERVADOS. NO SE APRECIAN IMÁGENES DE LITIASIS NI SIGNOS DE ECTASIA PIELOCALICIAL.\nRIÑÓN IZQUIERDO: EN SITUACIÓN Y DIMENSIONES CONSERVADAS. RELACIÓN CORTICOMEDULAR PRESERVADA. NO SE DETECTAN LESIONES SÓLIDAS, QUÍSTICAS NI SIGNOS DE RETENCIÓN URINARIA.`,
+  "ECOGRAFÍA RENAL": `RIÑÓN DERECHO: En situación, anatomía y tamaño normales. Espesor de la corteza y relación corticomedular preservados. No se aprecian imágenes de litiasis ni signos de ectasia pielocalicial.\nRIÑÓN IZQUIERDO: En situación y dimensiones conservadas. Relación corticomedular preservada. No se detectan lesiones sólidas, quísticas ni signos de retención urinaria.`,
   
-  "ECOGRAFÍA MAMARIA": `TEJIDO FIBROGLANDULAR: DE DISTRIBUCIÓN Y ECOESTRUCTURA NORMAL PARA LA EDAD DE LA PACIENTE.\nECOESTRUCTURA: CONSERVADA. NO SE OBSERVAN IMÁGENES DE NÓDULOS SÓLIDOS NI LESIONES QUÍSTICAS CON CRITERIOS DE SOSPECHA (BI-RADS 1).\nTEJIDO CELULAR SUBCUTÁNEO Y PLANOS MUSCULARES: SIN ALTERACIONES.\nREGIONES AXILARES: EXPLORADAS SIN EVIDENCIA DE ADENOMEGALIAS DE CARACTERÍSTICAS PATOLÓGICAS.`,
+  "ECOGRAFÍA MAMARIA": `TEJIDO FIBROGLANDULAR: De distribución y ecoestructura normal para la edad de la paciente.\nECOESTRUCTURA: Conservada. No se observan imágenes de nódulos sólidos ni lesiones quísticas con criterios de sospecha (BI-RADS 1).\nTEJIDO CELULAR SUBCUTÁNEO Y PLANOS MUSCULARES: Sin alteraciones.\nREGIONES AXILARES: Exploradas sin evidencia de adenomegalias de características patológicas.`,
   
-  "ECOGRAFÍA GINECOLÓGICA": `ÚTERO: EN ANTEVERSOFLEXIÓN, DE TAMAÑO, FORMA Y ECOESTRUCTURA CONSERVADOS. MIOMETRIO HOMOGÉNEO.\nENDOMETRIO: LINEAL, HOMOGÉNEO, CENTRAL, ACORDE A LA FASE DEL CICLO.\nOVARIO DERECHO: DE TAMAÑO Y ECOESTRUCTURA NORMAL.\nOVARIO IZQUIERDO: DE TAMAÑO Y ECOESTRUCTURA DENTRO DE LOS LÍMITES NORMALES.\nFONDO DE SACO DE DOUGLAS: LIBRE, SIN EVIDENCIA DE LÍQUIDO.`,
+  "ECOGRAFÍA GINECOLÓGICA": `ÚTERO: En anteversoflexión, de tamaño, forma y ecoestructura conservados. Miometrio homogéneo.\nENDOMETRIO: Lineal, homogéneo, central, acorde a la fase del ciclo.\nOVARIO DERECHO: De tamaño y ecoestructura normal.\nOVARIO IZQUIERDO: De tamaño y ecoestructura dentro de los límites normales.\nFONDO DE SACO DE DOUGLAS: Libre, sin evidencia de líquido.`,
   
-  "ECOGRAFÍA TIROIDEA": `LÓBULO DERECHO: DE DIMENSIONES CONSERVADAS, HOMOGÉNEO. NO SE OBSERVAN NÓDULOS.\nLÓBULO IZQUIERDO: DE MORFOLOGÍA Y TAMAÑO NORMALES, ECOESTRUCTURA PARENQUIMATOSA CONSERVADA.\nISTMO: DE ESPESOR NORMAL, HOMOGÉNEO.\nNO SE REGISTRAN ADENOMEGALIAS EN LAS CADENAS GANGLIONARES CERVICALES EXPLORADAS.`,
+  "ECOGRAFÍA TIROIDEA": `LÓBULO DERECHO: De dimensiones conservadas, homogéneo. No se observan nódulos.\nLÓBULO IZQUIERDO: De morfología y tamaño normales, ecoestructura parenquimatosa conservada.\nISTMO: De espesor normal, homogéneo.\nNo se registran adenomegalias en las cadenas ganglionares cervicales exploradas.`,
   
-  "ECOGRAFÍA DE PARTES BLANDAS": `TEJIDO CELULAR SUBCUTÁNEO: DE ECOESTRUCTURA Y ESPESOR CONSERVADOS.\nESTRUCTURAS MUSCULARES REGIONALES: CONTINUIDAD Y ECOGENICIDAD DE LAS FIBRAS PRESERVADAS. NO SE OBSERVAN COLECCIONES LÍQUIDAS, HEMATOMAS NI ALTERACIONES FOCALES DE LA ECOESTRUCTURA.`,
+  "ECOGRAFÍA DE PARTES BLANDAS": `TEJIDO CELULAR SUBCUTÁNEO: De ecoestructura y espesor conservados.\nESTRUCTURAS MUSCULARES REGIONALES: Continuidad y ecogenicidad de las fibras preservadas. No se observan colecciones líquidas, hematomas ni alteraciones focales de la ecoestructura.`,
   
-  "ECOGRAFÍA DOPPLER": `ANÁLISIS MORFOLÓGICO Y DINÁMICO:\nFLUJO ARTERIAL: PRESENTA CURVAS DE VELOCIDAD DE PULSO CON UN PATRÓN TRIFÁSICO NORMAL, DE ALTA RESISTENCIA CONSERVADA.\nÍNDICES DE RESISTENCIA: DENTRO DE LOS PARÁMETROS DE NORMALIDAD.\nFLUJO VENOSO: DIRECCIÓN CEFÁLICA, FASICULACIÓN RESPIRATORIA NORMAL Y RESPUESTA ADECUADA A LAS MANIOBRAS DE COMPRESIÓN MANUAL SIN SIGNOS DE INSUFICIENCIA NI TROMBOSIS.`,
+  "ECOGRAFÍA DOPPLER": `ANÁLISIS MORFOLÓGICO Y DINÁMICO:\nFLUJO ARTERIAL: Presenta curvas de velocidad de pulso con un patrón trifásico normal, de alta resistencia conservada.\nÍNDICES DE RESISTENCIA: Dentro de los parámetros de normalidad.\nFLUJO VENOSO: Dirección cefálica, fasiculación respiratoria normal y respuesta adecuada a las maniobras de compresión manual sin signos de insuficiencia ni trombosis.`,
   
-  "OTRO ESTUDIO ECOGRÁFICO": `ESTUDIO DENTRO DE LOS PARÁMETROS DE NORMALIDAD. SIN HALLAZGOS PATOLÓGICOS RELEVANTES AL MOMENTO DEL EXAMEN.`
+  "OTRO ESTUDIO ECOGRÁFICO": `Estudio dentro de los parámetros de normalidad. Sin hallazgos patológicos relevantes al momento del examen.`
 };
 
 const $ = (id) => document.getElementById(id);
@@ -537,6 +649,26 @@ function render() {
   });
 }
 
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function formatearProtocolo(texto) {
+  return texto
+    .split('\n')
+    .filter(linea => linea.trim() !== '')
+    .map(linea => {
+      const match = linea.match(/^([A-ZÁÉÍÓÚÑÜ0-9 ,.\/]{3,60}):\s*(.*)$/);
+      if (match) {
+        return '<p><strong>' + escapeHtml(match[1]) + ':</strong> ' + escapeHtml(match[2]) + '</p>';
+      }
+      return '<p>' + escapeHtml(linea) + '</p>';
+    })
+    .join('');
+}
+
 $('btn-guardar').addEventListener('click', () => {
   const nombreRaw = $('f-nombre').value.trim();
   if (!nombreRaw) {
@@ -549,8 +681,17 @@ $('btn-guardar').addEventListener('click', () => {
   const edad = $('f-edad').value.trim();
   const obra = ($('f-obra').value.trim() || 'Particular').toUpperCase();
   const estudio = $('f-estudio').value.toUpperCase();
-  const protocolo = $('f-protocolo').value.trim().toUpperCase();
-  const hallazgo = ($('f-hallazgo').value.trim() || 'SIN HALLAZGOS RELEVANTES').toUpperCase();
+  const protocolo = $('f-protocolo').value.trim();
+  let listaHallazgos = $('f-hallazgo').value
+    .split('\n')
+    .map(h => h.trim())
+    .filter(h => h.length > 0);
+  if (listaHallazgos.length === 0) {
+    listaHallazgos = ['Sin hallazgos patológicos relevantes', 'Estudio dentro de parámetros normales'];
+  } else if (listaHallazgos.length === 1) {
+    listaHallazgos.push('Resto del estudio dentro de parámetros normales');
+  }
+  const hallazgo = listaHallazgos.join('; ');
   const fechaEstudio = $('f-fecha').value || hoy();
 
   registros.push({
@@ -571,11 +712,19 @@ $('btn-guardar').addEventListener('click', () => {
   $('p-edad').textContent = edad || "---";
   $('p-obra').textContent = obra;
   $('p-estudio-titulo').textContent = estudio;
-  $('p-protocolo-cuerpo').textContent = protocolo;
+  $('p-protocolo-cuerpo').innerHTML = formatearProtocolo(protocolo);
+  $('p-conclusion-lista').innerHTML = listaHallazgos.map(h => '<li>' + escapeHtml(h) + '</li>').join('');
 
-  setTimeout(() => {
-    window.print();
-  }, 250);
+  const dispararImpresion = () => window.print();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.load('40px "Pinyon Script"').then(() => {
+      document.fonts.ready.then(() => {
+        setTimeout(dispararImpresion, 100);
+      });
+    });
+  } else {
+    setTimeout(dispararImpresion, 300);
+  }
 
   $('f-nombre').value = '';
   $('f-dni').value = '';
