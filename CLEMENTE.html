@@ -64,6 +64,18 @@
     justify-content: space-between;
     align-items: center;
   }
+  .fecha-chip {
+    width: auto;
+    margin-top: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--text-secondary);
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+  }
   label {
     display: block;
     font-size: 11px;
@@ -81,6 +93,14 @@
     background: var(--surface-2);
     color: var(--text);
     font-family: inherit;
+    margin-top: 8px;
+  }
+  .form-panel > input:first-of-type,
+  .row2 {
+    margin-top: 8px;
+  }
+  .row2 > div > input {
+    margin-top: 0;
   }
   input::placeholder, textarea::placeholder { color: var(--text-muted); }
   input:focus, select:focus, textarea:focus {
@@ -266,45 +286,44 @@
       white-space: nowrap;
     }
     .print-patient-box {
-      border: 0.75px solid #d5d5d5;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .ppb-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 20px;
-      font-size: 11.5px;
+      background: #f8f9fa;
+      border: 1px solid #ececec;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-areas:
+        "nombre nombre dni edad"
+        "obra obra obra fecha";
+      gap: 10px 20px;
       font-family: Arial, sans-serif;
-      padding: 6px 16px;
-      border-bottom: 1px solid #e4e4e4;
     }
-    .ppb-row:last-child {
-      border-bottom: none;
+    .pdb-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
     }
-    .ppb-field {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 5px;
-      white-space: nowrap;
+    .pdb-nombre { grid-area: nombre; }
+    .pdb-dni { grid-area: dni; }
+    .pdb-edad { grid-area: edad; }
+    .pdb-obra { grid-area: obra; }
+    .pdb-fecha { grid-area: fecha; }
+    .pdb-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #9a9a9a;
     }
-    .ppb-field.wide {
-      flex: 1;
-      min-width: 180px;
-    }
-    .ppb-value {
-      border-bottom: 1px solid #aaaaaa;
-      min-width: 60px;
-      padding: 0 4px 1px;
+    .pdb-value {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1a1a1a;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-    .ppb-field.wide .ppb-value {
-      flex: 1;
-      min-width: 110px;
     }
     .print-title {
       text-align: center;
@@ -397,26 +416,22 @@
 <div class="layout">
 
   <div class="panel form-panel">
-    <p class="panel-title">Nuevo registro e informe</p>
+    <p class="panel-title">
+      Nuevo registro e informe
+      <input type="date" id="f-fecha" class="fecha-chip">
+    </p>
 
-    <label>Fecha del estudio</label>
-    <input type="date" id="f-fecha">
-
-    <label>Nombre del paciente</label>
     <input type="text" id="f-nombre" placeholder="Nombre y apellido">
 
     <div class="row2">
       <div>
-        <label>DNI</label>
         <input type="text" id="f-dni" placeholder="DNI">
       </div>
       <div>
-        <label>Edad</label>
         <input type="number" id="f-edad" placeholder="Edad">
       </div>
     </div>
 
-    <label>Obra social</label>
     <input type="text" id="f-obra" list="obras" placeholder="Obra social o particular">
     <datalist id="obras">
       <option value="Particular">
@@ -428,7 +443,6 @@
       <option value="IOMA">
     </datalist>
 
-    <label>Tipo de estudio</label>
     <select id="f-estudio">
       <option value="ECOGRAFÍA ABDOMINAL">ECOGRAFÍA ABDOMINAL</option>
       <option value="ECOGRAFÍA RENAL">ECOGRAFÍA RENAL</option>
@@ -440,11 +454,10 @@
       <option value="OTRO ESTUDIO ECOGRÁFICO">OTRO ESTUDIO ECOGRÁFICO</option>
     </select>
 
-    <label>Texto del protocolo clínico</label>
     <textarea id="f-protocolo" placeholder="Cuerpo del informe ecográfico..."></textarea>
 
-    <label>Hallazgos para la conclusión (uno por línea, mínimo 2)</label>
-    <textarea id="f-hallazgo" style="min-height:70px" placeholder="ESTEATOSIS HEPÁTICA GRADO I
+    <textarea id="f-hallazgo" style="min-height:70px" placeholder="Hallazgos para la conclusión, uno por línea (mínimo 2):
+ESTEATOSIS HEPÁTICA GRADO I
 LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
 
     <button class="btn-primary" id="btn-guardar">Guardar e Imprimir Informe</button>
@@ -506,14 +519,25 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
   </div>
 
   <div class="print-patient-box">
-    <div class="ppb-row">
-      <span class="ppb-field wide"><strong>Nombre y apellido:</strong> <span class="ppb-value" id="p-nombre"></span></span>
-      <span class="ppb-field"><strong>DNI:</strong> <span class="ppb-value" id="p-dni"></span></span>
-      <span class="ppb-field"><strong>Edad:</strong> <span class="ppb-value" id="p-edad"></span> años</span>
+    <div class="pdb-item pdb-nombre">
+      <span class="pdb-label">Nombre y apellido</span>
+      <span class="pdb-value" id="p-nombre"></span>
     </div>
-    <div class="ppb-row">
-      <span class="ppb-field wide"><strong>Obra social / Cobertura:</strong> <span class="ppb-value" id="p-obra"></span></span>
-      <span class="ppb-field"><strong>Fecha:</strong> <span class="ppb-value" id="p-fecha"></span></span>
+    <div class="pdb-item pdb-dni">
+      <span class="pdb-label">DNI</span>
+      <span class="pdb-value" id="p-dni"></span>
+    </div>
+    <div class="pdb-item pdb-edad">
+      <span class="pdb-label">Edad</span>
+      <span class="pdb-value"><span id="p-edad"></span> años</span>
+    </div>
+    <div class="pdb-item pdb-obra">
+      <span class="pdb-label">Obra social / Cobertura</span>
+      <span class="pdb-value" id="p-obra"></span>
+    </div>
+    <div class="pdb-item pdb-fecha">
+      <span class="pdb-label">Fecha</span>
+      <span class="pdb-value" id="p-fecha"></span>
     </div>
   </div>
 
