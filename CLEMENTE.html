@@ -245,15 +245,15 @@
   @media print {
     html, body {
       background: #ffffff !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
     #app-screen {
       display: none !important;
     }
     #print-area {
       display: block !important;
-      position: absolute;
-      left: 0;
-      top: 0;
+      position: static;
       width: 100%;
       padding: 0;
       font-family: Arial, sans-serif;
@@ -390,13 +390,19 @@
       font-size: 12px;
     }
     .print-disclaimer {
-      font-size: 8.5px;
+      font-size: 8px;
       text-align: center;
-      color: #9a9a9a;
+      color: #6f6f6f;
       text-transform: uppercase;
-      letter-spacing: 0.2px;
-      line-height: 1.5;
-      margin-top: 10px;
+      letter-spacing: 0.1px;
+      line-height: 1.4;
+      margin: 10px auto 0;
+      max-width: 178mm;
+    }
+    .disclaimer-line {
+      display: block;
+      text-align: center;
+      white-space: nowrap;
     }
   }
 </style>
@@ -560,8 +566,8 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
     </div>
 
     <p class="print-disclaimer">
-      Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada.
-      No debe ser utilizado como parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional
+      <span class="disclaimer-line">Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada. No debe ser utilizado como</span>
+      <span class="disclaimer-line">parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional</span>
     </p>
   </div>
 </div>
