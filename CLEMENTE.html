@@ -32,9 +32,9 @@
     color: var(--text);
   }
   h1 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 34px;
-    font-weight: 600;
+    font-family: 'Pinyon Script', cursive;
+    font-size: 46px;
+    font-weight: normal;
     letter-spacing: 0.3px;
     text-align: center;
     margin: 4px 0 24px;
@@ -239,18 +239,15 @@
 
   @page {
     size: A4;
-    margin: 15mm 18mm;
+    margin: 15mm 18mm 38mm 18mm;
   }
 
   @media print {
     html, body {
       background: #ffffff !important;
     }
-    body * {
+    #app-screen {
       display: none !important;
-    }
-    #print-area, #print-area * {
-      display: block !important;
     }
     #print-area {
       display: block !important;
@@ -291,39 +288,30 @@
       border-radius: 10px;
       padding: 12px 18px;
       margin-bottom: 18px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-areas:
-        "nombre nombre dni edad"
-        "obra obra obra fecha";
-      gap: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 28px;
       font-family: Arial, sans-serif;
     }
     .pdb-item {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      min-width: 0;
+      flex: 0 1 auto;
     }
-    .pdb-nombre { grid-area: nombre; }
-    .pdb-dni { grid-area: dni; }
-    .pdb-edad { grid-area: edad; }
-    .pdb-obra { grid-area: obra; }
-    .pdb-fecha { grid-area: fecha; }
     .pdb-label {
       font-size: 8.5px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #9a9a9a;
+      white-space: nowrap;
     }
     .pdb-value {
       font-size: 13.5px;
       font-weight: 700;
       color: #1a1a1a;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .print-title {
       text-align: center;
@@ -363,14 +351,18 @@
       margin: 0 0 20px;
       text-align: justify;
     }
+    .print-footer {
+      position: fixed;
+      bottom: 8mm;
+      left: 18mm;
+      right: 18mm;
+      text-align: center;
+    }
     .print-signatures {
-      margin-top: 40px;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .sig-space {
       height: 20px;
@@ -404,14 +396,15 @@
       text-transform: uppercase;
       letter-spacing: 0.2px;
       line-height: 1.5;
-      margin-top: 26px;
+      margin-top: 10px;
     }
   }
 </style>
 </head>
 <body>
 
-<h1>Ecografías Dr. Luis Clemente</h1>
+<div id="app-screen">
+<h1>Ecografías Dr.Luis Clemente Suàrez</h1>
 
 <div class="layout">
 
@@ -509,6 +502,9 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
 
 </div>
 
+<div class="toast" id="toast"></div>
+</div>
+
 <div id="print-area">
   <div class="print-header">
     <img src="https://github.com/henryajf/FILES-RECET.AR-/blob/main/tachella.png?raw=true" alt="Logo clínica">
@@ -519,23 +515,23 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
   </div>
 
   <div class="print-patient-box">
-    <div class="pdb-item pdb-nombre">
+    <div class="pdb-item">
       <span class="pdb-label">Nombre y apellido</span>
       <span class="pdb-value" id="p-nombre"></span>
     </div>
-    <div class="pdb-item pdb-dni">
+    <div class="pdb-item">
       <span class="pdb-label">DNI</span>
       <span class="pdb-value" id="p-dni"></span>
     </div>
-    <div class="pdb-item pdb-edad">
+    <div class="pdb-item">
       <span class="pdb-label">Edad</span>
       <span class="pdb-value"><span id="p-edad"></span> años</span>
     </div>
-    <div class="pdb-item pdb-obra">
+    <div class="pdb-item">
       <span class="pdb-label">Obra social / Cobertura</span>
       <span class="pdb-value" id="p-obra"></span>
     </div>
-    <div class="pdb-item pdb-fecha">
+    <div class="pdb-item">
       <span class="pdb-label">Fecha</span>
       <span class="pdb-value" id="p-fecha"></span>
     </div>
@@ -553,23 +549,23 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
     Correlacionar hallazgos con antecedentes, clínica y examen físico del paciente, valoración oportuna con médico tratante.
   </p>
 
-  <div class="print-signatures">
-    <div class="sig-space"></div>
-    <div class="signature-line">
-      <span class="sig-name">Dr.Luis Clemente Suàrez</span>
-      <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
-      <span class="sig-mn">M.N 211820</span>
+  <div class="print-footer">
+    <div class="print-signatures">
+      <div class="sig-space"></div>
+      <div class="signature-line">
+        <span class="sig-name">Dr.Luis Clemente Suàrez</span>
+        <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
+        <span class="sig-mn">M.N 211820</span>
+      </div>
     </div>
-  </div>
 
-  <p class="print-disclaimer">
-    Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada.
-    No debe ser utilizado como parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional
-  </p>
+    <p class="print-disclaimer">
+      Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada.
+      No debe ser utilizado como parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional
+    </p>
+  </div>
 </div>
 
-
-<div class="toast" id="toast"></div>
 
 <script>
 const STORAGE_KEY = 'morbilidad_eco_registros_v1';
