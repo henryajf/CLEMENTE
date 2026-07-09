@@ -168,15 +168,21 @@
   }
   tr:last-child td { border-bottom: none; }
   .col-n { width: 30px; color: var(--text-muted); }
-  .col-del { width: 26px; text-align: center; }
-  .del-btn {
+  .col-del { width: 52px; text-align: center; white-space: nowrap; }
+  .edit-btn, .del-btn {
     border: none;
     background: none;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 14px;
+  }
+  .edit-btn {
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .del-btn {
     color: var(--danger);
     font-weight: 700;
-    cursor: pointer;
-    padding: 0;
-    font-size: 14px;
   }
   .empty-state {
     text-align: center;
@@ -239,7 +245,7 @@
 
   @page {
     size: A4;
-    margin: 15mm 18mm 38mm 18mm;
+    margin: 15mm 18mm;
   }
 
   @media print {
@@ -259,6 +265,27 @@
       font-family: Arial, sans-serif;
       color: #000000;
       background: #ffffff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .print-header,
+    .header-address,
+    .print-patient-box,
+    .pdb-value,
+    .print-title,
+    .print-protocol,
+    .print-protocol p,
+    .print-protocol strong,
+    .print-conclusion,
+    .print-conclusion .conclusion-label,
+    .print-conclusion .conclusion-label strong,
+    .print-conclusion li,
+    .print-correlacionar,
+    .signature-line .sig-role,
+    .signature-line .sig-mn {
+      color: #000000 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .print-header {
       display: flex;
@@ -277,7 +304,7 @@
     .print-header .header-address {
       text-align: right;
       font-size: 9px;
-      color: #333333;
+      color: #000000;
       line-height: 1.5;
       padding-top: 4px;
       white-space: nowrap;
@@ -310,7 +337,7 @@
     .pdb-value {
       font-size: 13.5px;
       font-weight: 700;
-      color: #1a1a1a;
+      color: #000000;
       white-space: nowrap;
     }
     .print-title {
@@ -351,12 +378,49 @@
       margin: 0 0 20px;
       text-align: justify;
     }
+    .content-cell {
+      width: calc(100% - 12mm);
+      vertical-align: top;
+      padding: 0 6mm 0 0;
+    }
+    .sidebar-cell {
+      width: 12mm;
+      vertical-align: top;
+      padding: 0;
+      position: relative;
+      background-image: linear-gradient(to right, #ffe600 0, #ffe600 3px, #000000 3px, #000000 10px, transparent 10px, transparent 100%);
+      background-repeat: no-repeat;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .sidebar-text-wrap {
+      position: absolute;
+      left: 16px;
+      top: 60%;
+      transform: translateY(-50%) rotate(-90deg);
+      transform-origin: center;
+      white-space: nowrap;
+    }
+    .sidebar-text-wrap span {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #000000;
+      letter-spacing: 0.5px;
+    }
+    .print-layout-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+    .print-layout-table tfoot {
+      display: table-footer-group;
+    }
+    .print-layout-table td {
+      padding: 0;
+    }
     .print-footer {
-      position: fixed;
-      bottom: 8mm;
-      left: 18mm;
-      right: 18mm;
       text-align: center;
+      padding-top: 20px;
     }
     .print-signatures {
       display: flex;
@@ -365,11 +429,11 @@
       text-align: center;
     }
     .sig-space {
-      height: 20px;
+      height: 70px;
     }
     .signature-line .sig-name {
       font-family: 'Pinyon Script', cursive;
-      font-size: 40px;
+      font-size: 42px;
       font-weight: normal;
       color: #000000;
       display: block;
@@ -379,30 +443,26 @@
     .signature-line .sig-role {
       display: block;
       font-family: Arial, sans-serif;
-      color: #333333;
-      font-size: 12px;
+      color: #000000;
+      font-size: 14px;
       margin-bottom: 1px;
     }
     .signature-line .sig-mn {
       display: block;
       font-family: Arial, sans-serif;
-      color: #333333;
-      font-size: 12px;
+      color: #000000;
+      font-size: 14px;
     }
     .print-disclaimer {
+      font-family: Arial, sans-serif;
       font-size: 8px;
       text-align: center;
-      color: #6f6f6f;
+      color: #888888;
       text-transform: uppercase;
-      letter-spacing: 0.1px;
+      font-style: italic;
       line-height: 1.4;
       margin: 10px auto 0;
       max-width: 178mm;
-    }
-    .disclaimer-line {
-      display: block;
-      text-align: center;
-      white-space: nowrap;
     }
   }
 </style>
@@ -512,64 +572,92 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
 </div>
 
 <div id="print-area">
-  <div class="print-header">
-    <img src="https://github.com/henryajf/FILES-RECET.AR-/blob/main/tachella.png?raw=true" alt="Logo clínica">
-    <div class="header-address">
-      AV 2DA.RIVADAVIA 15577 (1706) HAEDO-PCIA DE BS.AS<br>
-      TURNOS :0810-220-1430 INT.102//0810-220-0086 INT.101
-    </div>
-  </div>
+<table class="print-layout-table">
+  <tbody>
+    <tr>
+      <td class="content-cell">
+        <div class="print-header">
+          <img src="https://github.com/henryajf/FILES-RECET.AR-/blob/main/tachella.png?raw=true" alt="Logo clínica">
+          <div class="header-address">
+            AV 2DA.RIVADAVIA 15577 (1706) HAEDO-PCIA DE BS.AS<br>
+            TURNOS :0810-220-1430 INT.102//0810-220-0086 INT.101
+          </div>
+        </div>
 
-  <div class="print-patient-box">
-    <div class="pdb-item">
-      <span class="pdb-label">Nombre y apellido</span>
-      <span class="pdb-value" id="p-nombre"></span>
-    </div>
-    <div class="pdb-item">
-      <span class="pdb-label">DNI</span>
-      <span class="pdb-value" id="p-dni"></span>
-    </div>
-    <div class="pdb-item">
-      <span class="pdb-label">Edad</span>
-      <span class="pdb-value"><span id="p-edad"></span> años</span>
-    </div>
-    <div class="pdb-item">
-      <span class="pdb-label">Obra social / Cobertura</span>
-      <span class="pdb-value" id="p-obra"></span>
-    </div>
-    <div class="pdb-item">
-      <span class="pdb-label">Fecha</span>
-      <span class="pdb-value" id="p-fecha"></span>
-    </div>
-  </div>
+        <div class="print-patient-box">
+          <div class="pdb-item">
+            <span class="pdb-label">Nombre y apellido</span>
+            <span class="pdb-value" id="p-nombre"></span>
+          </div>
+          <div class="pdb-item">
+            <span class="pdb-label">DNI</span>
+            <span class="pdb-value" id="p-dni"></span>
+          </div>
+          <div class="pdb-item">
+            <span class="pdb-label">Edad</span>
+            <span class="pdb-value"><span id="p-edad"></span> años</span>
+          </div>
+          <div class="pdb-item">
+            <span class="pdb-label">Obra social / Cobertura</span>
+            <span class="pdb-value" id="p-obra"></span>
+          </div>
+          <div class="pdb-item">
+            <span class="pdb-label">Fecha</span>
+            <span class="pdb-value" id="p-fecha"></span>
+          </div>
+        </div>
 
-  <div class="print-title" id="p-estudio-titulo"></div>
-  <div class="print-protocol" id="p-protocolo-cuerpo"></div>
+        <div class="print-title" id="p-estudio-titulo"></div>
+        <div class="print-protocol" id="p-protocolo-cuerpo"></div>
 
-  <div class="print-conclusion">
-    <span class="conclusion-label"><strong>Conclusión:</strong> Signos Ecográficos Sugestivos De:</span>
-    <ol id="p-conclusion-lista"></ol>
-  </div>
+        <div class="print-conclusion">
+          <span class="conclusion-label"><strong>Conclusión:</strong> Signos Ecográficos Sugestivos De:</span>
+          <ol id="p-conclusion-lista"></ol>
+        </div>
 
-  <p class="print-correlacionar">
-    Correlacionar hallazgos con antecedentes, clínica y examen físico del paciente, valoración oportuna con médico tratante.
-  </p>
+        <p class="print-correlacionar">
+          Correlacionar hallazgos con antecedentes, clínica y examen físico del paciente, valoración oportuna con médico tratante.
+        </p>
+      </td>
+      <td class="sidebar-cell">
+        <div class="sidebar-lines">
+          <span class="sidebar-line-yellow"></span>
+          <span class="sidebar-line-black"></span>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td class="content-cell">
+        <div class="print-footer">
+          <div class="print-signatures">
+            <div class="sig-space"></div>
+            <div class="signature-line">
+              <span class="sig-name">Dr.Luis Clemente Suàrez</span>
+              <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
+              <span class="sig-mn">M.N 211820</span>
+            </div>
+          </div>
 
-  <div class="print-footer">
-    <div class="print-signatures">
-      <div class="sig-space"></div>
-      <div class="signature-line">
-        <span class="sig-name">Dr.Luis Clemente Suàrez</span>
-        <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
-        <span class="sig-mn">M.N 211820</span>
-      </div>
-    </div>
-
-    <p class="print-disclaimer">
-      <span class="disclaimer-line">Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada. No debe ser utilizado como</span>
-      <span class="disclaimer-line">parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional</span>
-    </p>
-  </div>
+          <p class="print-disclaimer">
+            Este es un estudio paraclínico de carácter estrictamente auxiliar, con limitaciones inherente y sensibilidad limitada.<br>
+            No debe ser utilizado como parámetro único de diagnóstico, conducta o tratamiento. Requiere de confirmación clínica y paraclínica adicional
+          </p>
+        </div>
+      </td>
+      <td class="sidebar-cell">
+        <div class="sidebar-lines">
+          <span class="sidebar-line-yellow"></span>
+          <span class="sidebar-line-black"></span>
+        </div>
+        <div class="sidebar-text-wrap">
+          <span id="p-estudio-lateral"></span>
+        </div>
+      </td>
+    </tr>
+  </tfoot>
+</table>
 </div>
 
 
@@ -659,7 +747,7 @@ function render() {
         '<td>' + r.obra + '</td>' +
         '<td>' + r.estudio + '</td>' +
         '<td>' + r.hallazgo + '</td>' +
-        '<td class="col-del"><button class="del-btn" data-id="' + r.id + '">×</button></td>';
+        '<td class="col-del"><button class="edit-btn" data-id="' + r.id + '" title="Editar">✎</button><button class="del-btn" data-id="' + r.id + '" title="Eliminar">×</button></td>';
       tbody.appendChild(tr);
     });
   }
@@ -671,6 +759,31 @@ function render() {
       registros = registros.filter(r => String(r.id) !== id);
       guardar();
       render();
+    });
+  });
+
+  tbody.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const r = registros.find(reg => String(reg.id) === id);
+      if (!r) return;
+
+      $('f-fecha').value = r.fecha;
+      $('f-nombre').value = r.nombre;
+      $('f-dni').value = r.dni;
+      $('f-edad').value = r.edad;
+      $('f-obra').value = r.obra;
+      $('f-estudio').value = r.estudio;
+      actualizarProtocoloPorDefecto();
+      $('f-hallazgo').value = r.hallazgo.split('; ').join('\n');
+
+      registros = registros.filter(reg => String(reg.id) !== id);
+      guardar();
+      render();
+
+      $('f-nombre').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $('f-nombre').focus();
+      showToast('Editando registro — corregí y volvé a guardar');
     });
   });
 }
@@ -738,6 +851,7 @@ $('btn-guardar').addEventListener('click', () => {
   $('p-edad').textContent = edad || "---";
   $('p-obra').textContent = obra;
   $('p-estudio-titulo').textContent = estudio;
+  $('p-estudio-lateral').textContent = estudio;
   $('p-protocolo-cuerpo').innerHTML = formatearProtocolo(protocolo);
   $('p-conclusion-lista').innerHTML = listaHallazgos.map(h => '<li>' + escapeHtml(h) + '</li>').join('');
 
