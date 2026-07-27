@@ -51,8 +51,8 @@
     border-radius: 16px;
     padding: 18px 20px;
   }
-  .form-panel { flex: 1.2; min-width: 320px; }
-  .table-panel { flex: 1.6; min-width: 380px; }
+  .form-panel { flex: 1.5; min-width: 380px; }
+  .table-panel { flex: 1.3; min-width: 380px; }
   .panel-title {
     font-size: 13px;
     font-weight: 600;
@@ -113,6 +113,11 @@
     min-height: 120px;
     font-size: 12.5px;
     line-height: 1.5;
+  }
+  #f-protocolo {
+    min-height: 42vh;
+    font-size: 13.5px;
+    line-height: 1.6;
   }
   .row2 { display: flex; gap: 10px; }
   .row2 > div { flex: 1; }
@@ -261,6 +266,8 @@
       display: block !important;
       position: static;
       width: 100%;
+      height: calc(297mm - 30mm);
+      box-sizing: border-box;
       padding: 0;
       font-family: Arial, sans-serif;
       color: #000000;
@@ -409,11 +416,21 @@
     }
     .print-layout-table {
       width: 100%;
+      height: 100%;
       table-layout: fixed;
       border-collapse: collapse;
     }
+    .print-layout-table tbody {
+      display: table-row-group;
+    }
+    .print-layout-table tbody td {
+      vertical-align: top;
+    }
     .print-layout-table tfoot {
       display: table-footer-group;
+    }
+    .print-layout-table tfoot td {
+      vertical-align: bottom;
     }
     .print-layout-table td {
       padding: 0;
@@ -430,6 +447,22 @@
     }
     .sig-space {
       height: 70px;
+    }
+    .signature-block {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+    .sig-stamp {
+      width: 92px;
+      height: 92px;
+      object-fit: contain;
+      opacity: 0.85;
+      mix-blend-mode: multiply;
+      margin-left: -18px;
+      margin-top: 18px;
     }
     .signature-line .sig-name {
       font-family: 'Pinyon Script', cursive;
@@ -510,6 +543,9 @@
       <option value="ECOGRAFÍA TIROIDEA">ECOGRAFÍA TIROIDEA</option>
       <option value="ECOGRAFÍA DE PARTES BLANDAS">ECOGRAFÍA DE PARTES BLANDAS</option>
       <option value="ECOGRAFÍA DOPPLER">ECOGRAFÍA DOPPLER</option>
+      <option value="ECOGRAFÍA PROSTÁTICA">ECOGRAFÍA PROSTÁTICA</option>
+      <option value="ECOGRAFÍA TESTICULAR">ECOGRAFÍA TESTICULAR</option>
+      <option value="ECOGRAFÍA RENOVESICAL">ECOGRAFÍA RENOVESICAL</option>
       <option value="OTRO ESTUDIO ECOGRÁFICO">OTRO ESTUDIO ECOGRÁFICO</option>
     </select>
 
@@ -560,7 +596,6 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
     </div>
 
     <div class="export-row">
-      <button id="btn-tsv">Copiar / descargar TSV</button>
       <button id="btn-excel">Descargar Excel (.xlsx)</button>
     </div>
     <p class="hint">La auditoría descargará exactamente lo que se encuentre filtrado arriba en la tabla.</p>
@@ -633,10 +668,13 @@ LITIASIS MÍNIMA RENAL IZQUIERDA"></textarea>
         <div class="print-footer">
           <div class="print-signatures">
             <div class="sig-space"></div>
-            <div class="signature-line">
-              <span class="sig-name">Dr.Luis Clemente Suàrez</span>
-              <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
-              <span class="sig-mn">M.N 211820</span>
+            <div class="signature-block">
+              <div class="signature-line">
+                <span class="sig-name">Dr.Luis Clemente Suàrez</span>
+                <span class="sig-role">Médico– Ecografista/Doppler Vascular</span>
+                <span class="sig-mn">M.N 211820</span>
+              </div>
+              <img class="sig-stamp" src="https://github.com/henryajf/FILES-RECET.AR-/blob/main/SELLO%20LUIS%20CLEMENTE%20(1).png?raw=true" alt="Sello Dr. Luis Clemente Suárez">
             </div>
           </div>
 
@@ -680,6 +718,12 @@ const PROTOCOLOS_BASE = {
   
   "ECOGRAFÍA DOPPLER": `ANÁLISIS MORFOLÓGICO Y DINÁMICO:\nFLUJO ARTERIAL: Presenta curvas de velocidad de pulso con un patrón trifásico normal, de alta resistencia conservada.\nÍNDICES DE RESISTENCIA: Dentro de los parámetros de normalidad.\nFLUJO VENOSO: Dirección cefálica, fasiculación respiratoria normal y respuesta adecuada a las maniobras de compresión manual sin signos de insuficiencia ni trombosis.`,
   
+  "ECOGRAFÍA PROSTÁTICA": `Se realiza estudio ecográfico prostático por vía suprapúbica con vejiga en adecuada repleción, apreciándose:\n\nVEJIGA: Paredes de espesor conservado, contenido anecoico, sin imágenes de litiasis ni lesiones parietales.\nPRÓSTATA: En situación habitual, de contornos regulares y ecoestructura homogénea. Diámetros conservados. Volumen prostático estimado dentro de límites normales para la edad.\nZONA PERIFÉRICA Y TRANSICIONAL: Sin imágenes nodulares ni áreas focales de alteración ecogénica.\nVESÍCULAS SEMINALES: De tamaño y ecoestructura conservados, simétricas.\nRESIDUO POSMICCIONAL: No significativo.`,
+
+  "ECOGRAFÍA TESTICULAR": `Se realiza estudio ecográfico testicular y escrotal con transductor lineal de alta frecuencia, apreciándose:\n\nTESTÍCULO DERECHO: En situación intraescrotal habitual, de forma, tamaño y ecoestructura conservados, homogéneo, sin imágenes nodulares ni lesiones focales.\nTESTÍCULO IZQUIERDO: En situación intraescrotal habitual, de forma, tamaño y ecoestructura conservados, homogéneo, sin imágenes nodulares ni lesiones focales.\nEPIDÍDIMOS: De tamaño y ecoestructura conservados en forma bilateral, sin colecciones ni imágenes quísticas.\nCORDONES ESPERMÁTICOS Y PLEXO PAMPINIFORME: Sin dilataciones venosas significativas ni signos de varicocele.\nBOLSAS ESCROTALES: Sin evidencia de líquido libre en cavidad vaginal ni engrosamiento parietal.`,
+
+  "ECOGRAFÍA RENOVESICAL": `Se practica ecosonograma renovesical con transductor convex multifrecuencial y vejiga en adecuada repleción, apreciándose:\n\nRIÑÓN DERECHO: En situación, forma y tamaño conservados. Relación corticomedular preservada. Sin imágenes de litiasis ni signos de dilatación pielocalicial.\nRIÑÓN IZQUIERDO: En situación, forma y tamaño conservados. Relación corticomedular preservada. Sin imágenes de litiasis ni signos de dilatación pielocalicial.\nVEJIGA: De paredes finas y regulares, contenido anecoico, sin imágenes de litiasis ni lesiones parietales.\nRESIDUO POSMICCIONAL: No significativo.`,
+
   "OTRO ESTUDIO ECOGRÁFICO": `Estudio dentro de los parámetros de normalidad. Sin hallazgos patológicos relevantes al momento del examen.`
 };
 
@@ -909,34 +953,6 @@ function datosParaExportar() {
     'Hallazgo / Diagnóstico': r.hallazgo
   }));
 }
-
-$('btn-tsv').addEventListener('click', () => {
-  const datos = datosParaExportar();
-  if (datos.length === 0) {
-    showToast('No hay registros para exportar');
-    return;
-  }
-  const headers = Object.keys(datos[0]);
-  const lineas = [headers.join('\t')];
-  datos.forEach(fila => {
-    lineas.push(headers.map(h => String(fila[h] ?? '')).join('\t'));
-  });
-  const tsv = lineas.join('\n');
-
-  navigator.clipboard.writeText(tsv).then(() => {
-    showToast('TSV copiado al portapapeles');
-  }).catch(() => {
-    showToast('No se pudo copiar, se descarga el archivo');
-  });
-
-  const blob = new Blob([tsv], { type: 'text/tab-separated-values;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = nombreArchivo('tsv');
-  a.click();
-  URL.revokeObjectURL(url);
-});
 
 $('btn-excel').addEventListener('click', () => {
   const datos = datosParaExportar();
